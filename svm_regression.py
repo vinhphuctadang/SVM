@@ -29,13 +29,17 @@ def main():
     b = np.array([1.] * m).reshape((m,1))
 
     C = np.vstack([
-        np.hstack([-X, -b, I, np.zeros((m, m))]),
-        np.hstack([X, b, np.zeros((m, m)), I]),
+        np.hstack([-X, b, I, np.zeros((m, m))]),
+        np.hstack([X, -b, np.zeros((m, m)), I]),
         np.hstack([np.zeros((m,n+1)), I, np.zeros((m, m))]),
         np.hstack([np.zeros((m,n+1)), np.zeros((m, m)), I]),
     ])
 
-    h = np.array([-epsilon*1.0] * m + [epsilon*1.0] * m + [0.] * (2*m))
+    h = np.array(
+        [-epsilon - X[i][1] for i in range(m)] +
+        [-epsilon + X[i][1] for i in range(m)] +
+        [0.]*(2*m)
+    )
 
     print('G',G)
     print('a',a)
@@ -47,7 +51,7 @@ def main():
 
     wb = wbz[:3]
     line(wb[0], wb[1], wb[2], style='-')
-    
+
     plt.show()
     plt.scatter(X[:,0], X[:,1], 'bo')
     pass
