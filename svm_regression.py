@@ -1,6 +1,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import quadprog as qp
+plt.axis('equal')
+def segment(A, B, style='-'):
+    plt.plot([A[0],B[0]], [A[1],B[1]], style)
+def line(a, b, c, L=-3, H=3, style='-'): # draw a line ax+by+c=0 within range of x in [L,H]
+    x1 = L
+    y1 = (-c-a*x1)/b
+    x2 = H
+    y2 = (-c-a*x2)/b
+    segment([x1,y1],[x2,y2],style=style)
+
 def main():
     X = np.array([
         [1., 1.],
@@ -33,10 +43,13 @@ def main():
     print('h',h)
     solution = qp.solve_qp(G, a, C.T, h)
 
-    wb = solution(solution[0])
+    wbz = solution(solution[0])
 
-    plt.scatter(X[:,0], X[:,1], 'bo')
+    wb = wbz[:3]
+    line(wb[0], wb[1], wb[2], style='-')
+    
     plt.show()
+    plt.scatter(X[:,0], X[:,1], 'bo')
     pass
 
 if __name__ == '__main__':
